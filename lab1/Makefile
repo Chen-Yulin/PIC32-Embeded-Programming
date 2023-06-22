@@ -1,4 +1,4 @@
-PROJECT_NAME = blinken
+PROJECT_NAME = lab2
 OUTPUT_DIR = build
 INCLUDE_DIR = include
 SOURCE_DIR = src
@@ -15,7 +15,7 @@ BIN2HEX = $(XC32_PREFIX)/bin/xc32-bin2hex
 PROCESSOR = 32MX795F512L
 GCC_ASFLAGS = -Wa,--defsym=__MPLAB_BUILD=1,--gdwarf-2
 GCC_LDFLAGS = -Wl,--defsym=__MPLAB_BUILD=1,--no-code-in-dinit,--no-dinit-in-serial-mem
-CFLAGS = -std=c11 -fno-common -mprocessor=$(PROCESSOR) -I$(INCLUDE_DIR) -isystem $(XC32_PREFIX)/pic32mx/include -mdfp="/opt/microchip/mplabx/v6.10/packs/Microchip/PIC32MX_DFP/1.5.259"
+CFLAGS = -std=c11 -fno-common -mprocessor=$(PROCESSOR) -I$(INCLUDE_DIR) -isystem $(XC32_PREFIX)/pic32mx/include -mdfp="/opt/microchip/mplabx/v5.30/packs/Microchip/PIC32MX_DFP/1.1.215"
 
 DEBUG ?= 1
 
