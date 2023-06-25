@@ -1,13 +1,13 @@
 [
   {
     "arguments": [
-      "/opt/microchip/xc32/v4.21/bin/xc32-gcc",
+      "/opt/microchip/xc32/v4.30/bin/xc32-gcc",
       "-std=c11",
       "-fno-common",
       "-D__32MX795F512L__",
       "-Iinclude",
       "-isystem",
-      "/opt/microchip/xc32/v4.21/pic32mx/include",
+      "/opt/microchip/xc32/v4.30/pic32mx/include",
       "-D__LANGUAGE_C__",
       "-Wa,--defsym=__MPLAB_BUILD=1,--gdwarf-2",
       "-g",

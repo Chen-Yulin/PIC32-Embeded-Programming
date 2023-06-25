@@ -34,7 +34,7 @@
 * LCD.c
 ************************************************************************/
 #include "LCD.h"
-//#include <plib.h>
+//#include <plib.h> // deprecated
 
 /* main driver */
 int main() {
@@ -137,7 +137,7 @@ void MCU_init() {
     IFS0CLR = 0x0110;           // clear the flags for timer 1 and timer 2
     
     /* enable global and individual interrupts */
-    __asm( "ei" );                // enable interrupt globally
+    __asm( "ei" );                // enable interrupt globally by execute a assembly instruction "ei"
     IEC0SET = 0x0110;           // enable interrupt for timer 1 and timer 2
 }
 

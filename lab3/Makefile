@@ -7,7 +7,7 @@ ASM_SOURCES = $(wildcard $(SOURCE_DIR)/*.s)
 ALL_SOURCES = $(C_SOURCES) $(ASM_SOURCES)
 ALL_OBJS = $(ALL_SOURCES:$(SOURCE_DIR)/%=$(OUTPUT_DIR)/objs/%.o)
 
-XC32_PREFIX = /opt/microchip/xc32/v4.21
+XC32_PREFIX = /opt/microchip/xc32/v4.30
 GCC = $(XC32_PREFIX)/bin/xc32-gcc
 OBJDUMP = $(XC32_PREFIX)/bin/xc32-objdump
 BIN2HEX = $(XC32_PREFIX)/bin/xc32-bin2hex
