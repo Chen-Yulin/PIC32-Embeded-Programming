@@ -1,15 +1,14 @@
 #include "init.h"
 
-void InitMCU(){
-    /* setup I/O ports to connect to the LCD module */
-    // let D0 to be output, D6 to be input
+void InitIO(){
+    // let D0, D1, D2 to be output, D6 to be input
     TRISDbits.TRISD0 = 0;
     TRISDbits.TRISD1 = 0;
     TRISDbits.TRISD2 = 0;
     TRISDbits.TRISD6 = 1;
+}
 
-    /* setup Timer to count for 1 us and 1 ms */
-    // ...your code goes here
+void InitCLK(){
     SYSKEY = 0x0;               // Ensure OSCCON is lock
     SYSKEY = 0xAA996655;        // Unlock sequence part 1 of 2 back to back instructions.
     SYSKEY = 0x556699AA;        // Unlock sequence part 2 of 2 back to back instructions.
@@ -20,19 +19,49 @@ void InitMCU(){
     SYSKEY = 0x0;               // Write non-key value to perform a re-lock.
 
     while(OSCCONbits.OSWEN);    // Loop until OSWEN = 0. Value of 0 indicates osc switch is complete.
+}
 
-    T1CON = 0x0;
-    PR1 = 0xFFFF;
-    T1CONSET = 0x8000;
+void InitTimer(){
+    // for Timer 1
+    T1CON = 0x0;//prescale 1:1
+    PR1 = 0xFFFF;//max period
+
+    // for Timer 2
+    T2CON = 0x0;//prescale 1:1
+    PR2 = 0x00C7;// period of 200
     
+}
 
+void StartTimer(){
+    T1CONSET = 0x8000;//start timer 1
+    T2CONSET = 0x8000;//start timer 2
+}
+
+void InitOC(){
+    // for OC1
+    OC1CON = 0x0;// first turn off oc1
+    OC1R = 0x0000;// Prim CR as 0
+    OC1RS = 0x0000;// Sec CR as 0
+    OC1CON = 0x0006; // set oc1 to PWM mode without fault pin enabled 
+}
+
+void InitInterrupt(){
     /* Configure Timer interrupts */ 
     INTCONbits.MVEC = 1;        // multi-vector mode
     IPC1SET = 0x000d;           // timer 1: priority is 3, subpriority is 1
     // IPC2SET = 0x000d;           // timer 2: priority is 3, subpriority is 1
     IFS0CLR = 0x0110;           // clear the flags for timer 1 and timer 2
-    
+
     /* enable global and individual interrupts */
     __asm( "ei" );                // enable interrupt globally by execute a assembly instruction "ei"
     IEC0SET = 0x0110;           // enable interrupt for timer 1 and timer 2
+}
+
+void InitMCU(){
+    InitIO();
+    InitCLK();
+    InitTimer();
+    InitOC();
+    InitInterrupt();
+    StartTimer();
 }

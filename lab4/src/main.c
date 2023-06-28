@@ -1,3 +1,4 @@
+#include "OC.h"
 #include "global.h"
 #include "header.h"
 #include <stdbool.h>
@@ -11,9 +12,14 @@ int main(void)
     bool changeDirection = 1;//1 for up, 0 for down
     int pressed = 0;
     
+    SetPWM1R(0);
+    SetPWM1RS(0);
+    EnablePWM1();
+    
+
     while(1){
         if (Button == 0 && pressed == 0) {
-            pressed = 70;
+            pressed = 800;
             if (dutyPercent > 0.999) {
                 changeDirection = 0;
             }else if (dutyPercent < 0.001) {
@@ -31,22 +37,14 @@ int main(void)
                 pressed = 0;
             }
         }
-        DelayMsec((int)(period*(1-dutyPercent)));
-        if (dutyPercent > 0.001) {
-            LED = 1;
-        }
-        DelayMsec((int)(period*dutyPercent));
-        if (dutyPercent < 0.999) {
-            LED = 0;
-        }
-        
+        SetPWM1RS((uchar)(dutyPercent * 255));
+
         if (changeDirection == 0) {
             LED2 = 1;
             LED3 = 0;
         }else{
             LED2 = 0;
             LED3 = 1;
-
         }
 
     }
