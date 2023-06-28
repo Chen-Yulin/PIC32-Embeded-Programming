@@ -1,5 +1,3 @@
-#include "OC.h"
-#include "global.h"
 #include "header.h"
 #include <stdbool.h>
 
