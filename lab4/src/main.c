@@ -17,7 +17,7 @@ int main(void)
 
     while(1){
         if (Button == 0 && pressed == 0) {
-            pressed = 800;
+            pressed = 99;
             if (dutyPercent > 0.999) {
                 changeDirection = 0;
             }else if (dutyPercent < 0.001) {
@@ -29,11 +29,9 @@ int main(void)
             }else{
                 dutyPercent -= 0.2;
             }
-        }else{
-            pressed -=1;
-            if (pressed < 0) {
-                pressed = 0;
-            }
+        }else if(Button ==1){
+
+            pressed  = 0;
         }
         SetPWM1RS((uchar)(dutyPercent * 255));
 

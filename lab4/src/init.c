@@ -6,6 +6,10 @@ void InitIO(){
     TRISDbits.TRISD1 = 0;
     TRISDbits.TRISD2 = 0;
     TRISDbits.TRISD6 = 1;
+    
+
+    // set pull up for RD6 (multiplexed with SW1 and CN15)
+    CNPUEbits.CNPUE15 = 1;
 }
 
 void InitCLK(){
@@ -28,7 +32,7 @@ void InitTimer(){
 
     // for Timer 2
     T2CON = 0x0;//prescale 1:1
-    PR2 = 0x00C7;// period of 200
+    PR2 = 0x00FF;// period of 200
     
 }
 
