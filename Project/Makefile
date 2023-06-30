@@ -1,4 +1,4 @@
-PROJECT_NAME = lab2
+PROJECT_NAME = Project
 OUTPUT_DIR = build
 INCLUDE_DIR = include
 SOURCE_DIR = src

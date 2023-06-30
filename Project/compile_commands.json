@@ -55,11 +55,53 @@
       "-g",
       "-c",
       "-o",
+      "build/objs/OC.c.o",
+      "src/OC.c"
+    ],
+    "directory": "/home/cyl/373Code/Project",
+    "file": "/home/cyl/373Code/Project/src/OC.c",
+    "output": "/home/cyl/373Code/Project/build/objs/OC.c.o"
+  },
+  {
+    "arguments": [
+      "/opt/microchip/xc32/v4.30/bin/xc32-gcc",
+      "-std=c11",
+      "-fno-common",
+      "-D__32MX795F512L__",
+      "-Iinclude",
+      "-isystem",
+      "/opt/microchip/xc32/v4.30/pic32mx/include",
+      "-D__LANGUAGE_C__",
+      "-Wa,--defsym=__MPLAB_BUILD=1,--gdwarf-2",
+      "-g",
+      "-c",
+      "-o",
       "build/objs/Timer.c.o",
       "src/Timer.c"
     ],
     "directory": "/home/cyl/373Code/Project",
     "file": "/home/cyl/373Code/Project/src/Timer.c",
     "output": "/home/cyl/373Code/Project/build/objs/Timer.c.o"
+  },
+  {
+    "arguments": [
+      "/opt/microchip/xc32/v4.30/bin/xc32-gcc",
+      "-std=c11",
+      "-fno-common",
+      "-D__32MX795F512L__",
+      "-Iinclude",
+      "-isystem",
+      "/opt/microchip/xc32/v4.30/pic32mx/include",
+      "-D__LANGUAGE_C__",
+      "-Wa,--defsym=__MPLAB_BUILD=1,--gdwarf-2",
+      "-g",
+      "-c",
+      "-o",
+      "build/objs/UART.c.o",
+      "src/UART.c"
+    ],
+    "directory": "/home/cyl/373Code/Project",
+    "file": "/home/cyl/373Code/Project/src/UART.c",
+    "output": "/home/cyl/373Code/Project/build/objs/UART.c.o"
   }
 ]

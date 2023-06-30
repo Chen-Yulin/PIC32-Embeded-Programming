@@ -8,7 +8,7 @@ struct bits {
 
 
 /* configure timer SFRs to generate num us delay*/
-void DelayUsec(uchar num) {
+void DelayUsec(short int num) {
     // ...your code goes here
     PR1 = num;
     Timer1Flags.timer1_done = 0;
@@ -21,15 +21,12 @@ void DelayUsec(uchar num) {
 
 /* configure timer SFRs to generate 1 ms delay*/
 void GenMsec() {
-    DelayUsec(250);
-    DelayUsec(250);
-    DelayUsec(250);
-    DelayUsec(250);
+    DelayUsec(1000);
 }
 
 /* Call GenMsec() num times to generate num ms delay*/
-void DelayMsec(uchar num) {
-    uchar i;
+void DelayMsec(int num) {
+    int i;
     for (i=0; i<num; i++) {
         GenMsec();
     }

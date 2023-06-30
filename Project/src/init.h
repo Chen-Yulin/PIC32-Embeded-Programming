@@ -3,7 +3,7 @@
 
 #include "global.h"
 
-void InitMCU();
+void Init_MCU();
 
 #endif // !INIT
 
