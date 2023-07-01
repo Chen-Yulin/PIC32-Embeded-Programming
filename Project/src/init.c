@@ -54,15 +54,22 @@ void Init_OC(){
 }
 
 void Init_Interrupt(){
-    /* Configure Timer interrupts */ 
     INTCONbits.MVEC = 1;        // multi-vector mode
+    /* Configure Timer interrupts */ 
     IPC1SET = 0x000d;           // timer 1: priority is 3, subpriority is 1
     // IPC2SET = 0x000d;           // timer 2: priority is 3, subpriority is 1
     IFS0CLR = 0x0110;           // clear the flags for timer 1 and timer 2
+    
+    // Configure UART interrupts
+    IPC6SET = 0x0005;           // UART 1: priority is 1, subpriority is 1
+    IFS0bits.U1RXIF = 0;        // clear the flag for UART 1
 
     /* enable global and individual interrupts */
     __asm( "ei" );                // enable interrupt globally by execute a assembly instruction "ei"
-    IEC0SET = 0x0110;           // enable interrupt for timer 1 and timer 2
+    // enable interrupt for timer 1, timer 2, UART 1
+    IEC0bits.T1IE = 1;
+    IEC0bits.T2IE = 1;
+    IEC0bits.U1RXIE = 1;
 }
 
 void Init_UART(){
@@ -73,6 +80,18 @@ void Init_UART(){
     U1BRGSET = 51; // baud rate 9600: 8M/16*(51+1)
     U1MODEbits.ON = 1;  // turn on UART1
     U1STAbits.UTXEN = 1;// enable transmit
+    U1STAbits.URXEN = 1;// enable receive
+    U1STAbits.URXISEL = 0b00; // interrupt when receive buffer is not empty
+    
+    // for UART 2
+    U2MODEbits.ON = 0;  // turn off UART2
+    U2MODEbits.PDSEL = 1;   // 8 bit data, even parity
+    U2MODEbits.STSEL = 0;   // 1 bit stop
+    U2BRGSET = 51; // baud rate 9600: 8M/16*(51+1)
+    U2MODEbits.ON = 1;  // turn on UART2
+    U2STAbits.UTXEN = 1;// enable transmit
+    U2STAbits.URXEN = 1;// enable receive
+    U2STAbits.URXISEL = 0b00; // interrupt when receive buffer is not empty
 }
 
 void Init_MCU(){

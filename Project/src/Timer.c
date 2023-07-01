@@ -1,4 +1,5 @@
 #include "Timer.h"
+#include "UART.h"
 
 //define a interrupt flag struct
 struct bits {
@@ -39,4 +40,5 @@ void timer_1_interrupt(void) {
     IFS0CLR = 0x0010;           // clear the flag for timer 1
     Timer1Flags.timer1_done = 1;      // set up the flags
     TMR1 = 0;
+    //U2_Print("time_up\r\n");
 }
