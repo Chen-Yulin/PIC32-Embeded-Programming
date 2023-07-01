@@ -6,7 +6,8 @@ void Init_IO(){
     TRISDbits.TRISD1 = 0;
     TRISDbits.TRISD2 = 0;
     TRISDbits.TRISD6 = 1;
-    
+    TRISEbits.TRISE7 = 0;
+
 
     // set pull up for RD6 (multiplexed with SW1 and CN15)
     CNPUEbits.CNPUE15 = 1;
@@ -94,6 +95,26 @@ void Init_UART(){
     U2STAbits.URXISEL = 0b00; // interrupt when receive buffer is not empty
 }
 
+void Init_SPI(){
+    int rData;
+    IEC0CLR = 0x03800000;
+
+    SPI1CONbits.ON = 0;
+    rData = SPI1BUF;
+    SPI1CONbits.MSTEN = 1;
+    SPI1CONbits.CKP = 1;    // idle state is high
+    SPI1CONbits.CKE = 1;    // data change from active to idle, i.e. pos edge, depicited from STM32F103C-LCD-GBK lcd sample
+    SPI1CONbits.SMP = 0;
+    SPI1CONbits.MODE16 = 0;
+    SPI1CONbits.MODE32 = 0;
+    SPI1CONbits.ENHBUF = 1;
+    SPI1CONbits.MSSEN = 1;
+    SPI1BRGSET = 1;    // baud rate 2M: 8M/2*(1+1)
+
+    SPI1CONbits.ON = 1;
+
+}
+
 void Init_MCU(){
     Init_IO();
     Init_CLK();
@@ -102,4 +123,5 @@ void Init_MCU(){
     Init_Interrupt();
     //Start_Timer();
     Init_UART();
+    Init_SPI();
 }
