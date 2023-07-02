@@ -3,15 +3,20 @@
 //#include "OC.h"
 #include "init.h"
 #include "UART.h"
-
+#include "TFT.h"
+#include "SPI.h"
 
 
 void Setup(){
     Init_MCU();
     Init_RadarInfo();
+    TFT_Init();
+    LED3 = 0;
+    //SPI1_Send_u16(16);
 }
 
 void Loop(){
+    //LED3 = !PORTDbits.RD2;
     DelayMsec(500);
     U2_Print("targetNum:  ");
     U2_Print_uchar(radarInfo.targetNum);

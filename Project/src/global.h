@@ -13,7 +13,7 @@ typedef uint16_t uint;
 
 // Port definitions
 #define Button PORTDbits.RD6
-#define LED LATDbits.LATD0
+#define LED0 LATDbits.LATD0
 #define LED2 LATDbits.LATD1
 #define LED3 LATDbits.LATD2
 #define TFT_DC LATEbits.LATE7
@@ -27,8 +27,8 @@ typedef uint16_t uint;
 #define RADAR_BUFFER_MAX_LEN 94 // 14 + RADAR_MAX_TARGET*8
 
 // for TFT Displayer
-#define TFT_WIDTH 240
-#define TFT_HEIGHT 320
+#define TFT_WIDTH 10
+#define TFT_HEIGHT 20
 
 // global tool
 char * uchar_2_str(uchar c, char * str);
