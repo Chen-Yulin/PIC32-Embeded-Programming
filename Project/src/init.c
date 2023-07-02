@@ -97,7 +97,7 @@ void Init_UART(){
 
 void Init_SPI(){
     int rData;
-    IEC0CLR = 0x03800000;
+    //IEC0CLR = 0x03800000;
 
     SPI1CONbits.ON = 0;
     rData = SPI1BUF;
