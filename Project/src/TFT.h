@@ -1,5 +1,14 @@
 #ifndef TFTHEADER
 #define TFTHEADER
+/*
+Signal TFT ---> MCU PIC32MX795F512L
+-----------------------------------
+RESET       ---> NOP
+CS          ---> GND
+DC          ---> RE7
+MOSI        ---> RD0
+SCK         ---> RD10
+*/
 
 #include "global.h"
 

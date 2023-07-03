@@ -6,8 +6,8 @@ void Init_IO(){
     TRISDbits.TRISD1 = 0;
     TRISDbits.TRISD2 = 0;
     TRISDbits.TRISD6 = 1;
-    TRISDbits.TRISD10 = 0; // SCK
-    TRISEbits.TRISE7 = 0;
+    TRISDbits.TRISD10 = 0;  // SPI1 SCK
+    TRISEbits.TRISE7 = 0;   // SPI1 D/C
 
 
     // set pull up for RD6 (multiplexed with SW1 and CN15)

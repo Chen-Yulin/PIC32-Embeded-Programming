@@ -25,8 +25,9 @@ void TFT_WriteReg(uint TFT_Reg, uint TFT_RegValue){
 }
 
 void TFT_SOFT_RESET(){
-    TFT_SendCmd(ILI9341_CMD_SOFTWARE_RESET);
     DelayMsec(100);
+    TFT_SendCmd(ILI9341_CMD_SOFTWARE_RESET);
+    DelayMsec(200);
 }
 
 void TFT_DisplayOn(){

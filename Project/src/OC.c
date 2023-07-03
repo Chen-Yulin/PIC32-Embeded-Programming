@@ -5,7 +5,7 @@ void Enable_PWM1(){
     OC1CONSET = 0x8000;//start oc1
 }
 void Disable_PWM1(){
-    T2CONCLR = 0x8000;//start timer 2
+    T2CONCLR = 0x8000;//stop timer 2
     OC1CONCLR = 0x8000;//stop oc1
 }
 

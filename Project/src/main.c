@@ -4,7 +4,7 @@
 #include "init.h"
 #include "UART.h"
 #include "TFT.h"
-#include "SPI.h"
+//#include "SPI.h"
 
 
 void Setup(){
@@ -17,6 +17,7 @@ void Setup(){
 
 void Loop(){
     //LED3 = !PORTDbits.RD2;
+    TFT_Clear(GREEN);
     DelayMsec(500);
     U2_Print("targetNum:  ");
     U2_Print_uchar(radarInfo.targetNum);
