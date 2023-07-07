@@ -1,8 +1,12 @@
 #include "global.h"
 
-char Str_Buffer[4];
+bool RadarInfo_Updated = false;
 
 char * uchar_2_str(uchar c, char * str){
     sprintf(str, "%u", c);
+    return str;
+}
+char * float_2_str(float c, char * str){
+    sprintf(str, "%.4g", c);
     return str;
 }

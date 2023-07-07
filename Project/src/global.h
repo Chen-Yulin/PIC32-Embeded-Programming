@@ -6,6 +6,26 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+
+// math
+#define M_PI 3.1415
+
+// global variables
+extern bool RadarInfo_Updated;
+
+
+// struct definition
+typedef struct {
+    float x;
+    float y;
+    float z;
+} Vector3D;
+
+typedef struct {
+    float yaw;
+    float pitch;
+} Turret_para;
 
 // type definitions
 typedef unsigned char uchar;
@@ -30,8 +50,15 @@ typedef uint16_t uint;
 #define TFT_WIDTH 10
 #define TFT_HEIGHT 20
 
+// for turret
+#define TURRENT_X_OFFSET 0
+#define TURRENT_Y_OFFSET 0
+#define TURRENT_Z_OFFSET 0
+
 // global tool
 char * uchar_2_str(uchar c, char * str);
+char * float_2_str(float i, char * str);
+
 
 
 

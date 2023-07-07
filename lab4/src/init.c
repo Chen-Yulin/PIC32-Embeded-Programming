@@ -32,7 +32,7 @@ void InitTimer(){
 
     // for Timer 2
     T2CON = 0x0;//prescale 1:1
-    PR2 = 0x00FF;// period of 200
+    PR2 = 0x00FF;// period of 256
     
 }
 

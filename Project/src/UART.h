@@ -25,6 +25,11 @@ extern uchar RadarInfo_Buffer_ExpectLen;
 
 void U2_Print(char *str);
 void U2_Print_uchar(uchar c);
+void U2_Print_float(float c);
+
+void Print_RadarInfo(RadarInfo info);
+void Print_Turrent_Para(Turret_para turrent_para);
+void Print_Vector3D(Vector3D vector);
 
 void Init_RadarInfo();
 void Update_RadarInfo();
