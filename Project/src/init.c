@@ -103,10 +103,11 @@ void Init_SPI(){
     SPI1CONbits.ON = 0;
     rData = SPI1BUF;
     SPI1STAT = 0x0;
-    SPI1CON = 0x0;
+    SPI1CON = 0x0;  
+    SPI1CONbits.SRXISEL = 0;// MSB first
     SPI1CONbits.MSTEN = 1;
-    //SPI1CONbits.CKP = 1;    // idle state is high
-    SPI1CONbits.CKE = 1;    // data change from active to idle, i.e. pos edge, depicited from STM32F103C-LCD-GBK lcd sample
+    SPI1CONbits.CKP = 1;    // 0: idle state is high, 1: idle state is high
+    SPI1CONbits.CKE = 1;    // 1: data change from active to idle, 0: data change from idle to active
     //SPI1CONbits.ENHBUF = 1;
     SPI1BRGSET = 1;    // baud rate 2M: 8M/2*(1+1)
 

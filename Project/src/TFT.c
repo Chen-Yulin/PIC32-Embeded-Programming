@@ -3,9 +3,9 @@
 #include "Timer.h"
 #include "UART.h"
 
-void TFT_SendCmd(uint regval){
+void TFT_SendCmd(uchar regval){
     DC_ON;
-    SPI1_Send_u16(regval);
+    SPI1_Send_u8(regval);
 }
 
 void TFT_SendData8(uchar data){

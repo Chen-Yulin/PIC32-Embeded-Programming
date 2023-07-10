@@ -113,7 +113,7 @@ SCK         ---> RD10
 
 
 
-void TFT_SendCmd(uint regval);
+void TFT_SendCmd(uchar regval);
 void TFT_SendData8(uchar data);
 void TFT_SendData16(uint data);
 void TFT_WriteReg(uint TFT_Reg, uint TFT_RegValue);

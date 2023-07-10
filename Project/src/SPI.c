@@ -9,5 +9,5 @@ void SPI1_Send_u8(uchar data){
 void SPI1_Send_u16(uint data){
     // big endian transmission
     SPI1_Send_u8(data >> 8);
-    SPI1_Send_u8((uchar)data&0xFF);
+    SPI1_Send_u8((uchar)(data&0x00FF));
 }

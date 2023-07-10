@@ -6,6 +6,7 @@
 #include "TFT.h"
 #include "Radar.h"
 #include <math.h>
+#include "SPI.h"
 //#include "SPI.h"
 
 Turret_para turrent_para;
