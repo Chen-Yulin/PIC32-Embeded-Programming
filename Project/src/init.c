@@ -5,6 +5,7 @@ void Init_IO(){
     TRISDbits.TRISD0 = 0;
     TRISDbits.TRISD1 = 0;
     TRISDbits.TRISD2 = 0;
+    TRISDbits.TRISD3 = 0;
     TRISDbits.TRISD6 = 1;
     TRISDbits.TRISD10 = 0;  // SPI1 SCK
     TRISEbits.TRISE7 = 0;   // SPI1 D/C
@@ -36,7 +37,7 @@ void Init_Timer(){
     // for Timer 2
     T2CON = 0x0;
     T2CONbits.TCKPS = 0b011;//prescale 1:8
-    PR2 = 0x00FF;// period of 255
+    PR2 = 20000;// freqeuncy of 50 Hz
     
 }
 /*
@@ -47,12 +48,18 @@ void Start_Timer(){
 */
 
 void Init_OC(){
-    // for OC1
-    OC1CON = 0x0;// first turn off oc1
-    OC1R = 0x0000;// Prim CR as 0
-    OC1RS = 0x0000;// Sec CR as 0
-    OC1CON = 0x0006; // set oc1 to PWM mode without fault pin enabled 
-    OC1CONbits.OCTSEL = 0;  // use timer 2 as the clock source for OC1
+    // for OC3
+    OC3CON = 0x0;// first turn off oc3
+    OC3R = 0x0000;// Prim CR as 0
+    OC3RS = 0x0000;// Sec CR as 0
+    OC3CON = 0x0006; // set oc3 to PWM mode without fault pin enabled 
+    OC3CONbits.OCTSEL = 0;  // use timer 2 as the clock source for OC3
+    // for OC4
+    OC4CON = 0x0;// first turn off oc4
+    OC4R = 0x0000;// Prim CR as 0
+    OC4RS = 0x0000;// Sec CR as 0
+    OC4CON = 0x0006; // set oc4 to PWM mode without fault pin enabled 
+    OC4CONbits.OCTSEL = 0;  // use timer 2 as the clock source for OC4
 }
 
 void Init_Interrupt(){
@@ -119,9 +126,8 @@ void Init_MCU(){
     Init_IO();
     Init_CLK();
     Init_Timer();
-    //Init_OC();
+    Init_OC();
     Init_Interrupt();
-    //Start_Timer();
     Init_UART();
-    Init_SPI();
+    //Init_SPI();
 }

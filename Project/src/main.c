@@ -7,9 +7,12 @@
 #include "Radar.h"
 #include <math.h>
 #include "SPI.h"
+#include "Timer.h"
+#include "OC.h"
+#include "Servo.h"
 //#include "SPI.h"
 
-Turret_para turrent_para;
+Turret_para turret_para;
 
 uchar choosenTargetID;
 
@@ -28,33 +31,39 @@ void Update_FireControl_Direct(Vector3D lockedTarget_Position){
     Vector3D realTarget_Position = {lockedTarget_Position.x-TURRENT_X_OFFSET, 
                                     lockedTarget_Position.y-TURRENT_Y_OFFSET, 
                                     lockedTarget_Position.z-TURRENT_Z_OFFSET};  // calculate the target position with respect to turret
-    Print_Vector3D(realTarget_Position);
+    //Print_Vector3D(realTarget_Position);
 
     float distance_xyz = sqrt(pow(realTarget_Position.x, 2) + pow(realTarget_Position.y, 2) + pow(realTarget_Position.z, 2));
     float distance_xz = sqrt(pow(realTarget_Position.x, 2) + pow(realTarget_Position.z, 2));
 
-    turrent_para.pitch = 180/M_PI * atan(realTarget_Position.y/distance_xz); // up: y positive
-    turrent_para.yaw = 90 - 180/M_PI * atan(realTarget_Position.x/realTarget_Position.z); // forward: z positive; right: x positive; anti-clockwise: 0~180 yaw angle
+    turret_para.pitch = 180/M_PI * atan(realTarget_Position.y/distance_xz); // up: y positive
+    turret_para.yaw = 90 - 180/M_PI * atan(realTarget_Position.x/realTarget_Position.z); // forward: z positive; right: x positive; anti-clockwise: 0~180 yaw angle
+}
+
+void Update_Turret_Servo(){
+    Set_Servo1(turret_para.yaw);
+    Set_Servo2(turret_para.pitch+90);
+}
+
+void Init_Turret_Servo(){
+    Enable_Servo1();
+    Set_Servo1(90);
+    Enable_Servo2();
+    Set_Servo2(90);
 }
 
 
 void Setup(){
     Init_MCU();
-    Init_RadarInfo();
-    TFT_Init();
-    LED3 = 0;
-    turrent_para.yaw = 90;
-    choosenTargetID = 0;
-    //SPI1_Send_u16(16);
+    Init_Turret_Servo();
 }
 
 void Loop(){
-    //LED3 = !PORTDbits.RD2;
     // do something on radar when the radar information is updated
     if (RadarInfo_Updated) {
         RadarInfo tmp_info;
         tmp_info = radarInfo;
-        Print_RadarInfo(tmp_info);
+        //Print_RadarInfo(tmp_info);
         if (choosenTargetID < 10) {
             uchar id = 0;
             for (id = 0; id<10; id++) {
@@ -66,13 +75,8 @@ void Loop(){
             }
         }
         RadarInfo_Updated = false;
+        Update_Turret_Servo();
     }
-    /*
-    if (radarInfo.targetNum > 0) {
-        LED = 1;
-    }else{
-        LED = 0;
-    }*/
 
 }
 
