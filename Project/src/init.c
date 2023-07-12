@@ -82,7 +82,7 @@ void Init_Interrupt(){
 }
 
 void Init_UART(){
-    // for UART 1
+    // for UART 1 (Radar)
     U1MODEbits.ON = 0;  // turn off UART1
     U1MODEbits.PDSEL = 1;   // 8 bit data, even parity
     U1MODEbits.STSEL = 0;   // 1 bit stop
@@ -92,9 +92,9 @@ void Init_UART(){
     U1STAbits.URXEN = 1;// enable receive
     U1STAbits.URXISEL = 0b00; // interrupt when receive buffer is not empty
     
-    // for UART 2
+    // for UART 2 (IPS screen)
     U2MODEbits.ON = 0;  // turn off UART2
-    U2MODEbits.PDSEL = 1;   // 8 bit data, even parity
+    U2MODEbits.PDSEL = 0;   // 8 bit data, no parity
     U2MODEbits.STSEL = 0;   // 1 bit stop
     U2BRGSET = 51; // baud rate 9600: 8M/16*(51+1)
     U2MODEbits.ON = 1;  // turn on UART2
@@ -129,5 +129,5 @@ void Init_MCU(){
     Init_OC();
     Init_Interrupt();
     Init_UART();
-    //Init_SPI();
+    Init_SPI();
 }

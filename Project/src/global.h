@@ -58,6 +58,7 @@ typedef uint16_t uint;
 // global tool
 char * uchar_2_str(uchar c, char * str);
 char * float_2_str(float i, char * str);
+char * uint_2_str(uint i, char * str);
 
 
 

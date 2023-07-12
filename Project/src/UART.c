@@ -35,6 +35,13 @@ void U2_Print_float(float c){
     int len = strlen(str);
     UART2_SendData((uchar *)str, len);
 }
+void U2_Print_uint(uint c){
+    char str[6];
+    uint_2_str(c,str);
+    int len = strlen(str);
+    UART2_SendData((uchar *)str, len);
+}
+
 void Print_Turrent_Para(Turret_para turrent_para){
     U2_Print("turret yaw:  ");
     U2_Print_float(turrent_para.yaw);

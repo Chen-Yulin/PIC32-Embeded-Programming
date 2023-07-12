@@ -10,6 +10,7 @@ void UART2_SendData(unsigned char *data, int len);
 void U2_Print(char *str);
 void U2_Print_uchar(uchar c);
 void U2_Print_float(float c);
+void U2_Print_uint(uint c);
 
 void Print_RadarInfo(RadarInfo info);
 void Print_Turrent_Para(Turret_para turrent_para);
