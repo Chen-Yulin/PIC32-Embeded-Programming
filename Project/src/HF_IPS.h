@@ -11,6 +11,10 @@
 #define IPS_YELLOW 31
 
 
+extern uchar ScreenOK_Buffer[4];
+extern uchar ScreenOK_Index;
+
+
 void Draw_RadarTarget(TargetInfo info);
 
 void IPS_BOXF(uint x, uint y, uint w, uint h, uint color);

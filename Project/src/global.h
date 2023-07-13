@@ -13,6 +13,7 @@
 
 // global variables
 extern bool RadarInfo_Updated;
+extern bool ScreenExcution_OK;
 
 
 // struct definition

@@ -10,6 +10,7 @@
 #include "Timer.h"
 #include "OC.h"
 #include "Servo.h"
+#include "HF_IPS.h"
 //#include "SPI.h"
 
 Turret_para turret_para;
@@ -56,6 +57,12 @@ void Init_Turret_Servo(){
 void Setup(){
     Init_MCU();
     Init_Turret_Servo();
+    U2_Print("RESET();\r\n");
+    ScreenExcution_OK = false;
+    while(ScreenExcution_OK == false);
+    U2_Print("SET_TXT(0,'TWS');\r\n");
+    ScreenExcution_OK = false;
+    while(ScreenExcution_OK == false);
 }
 
 void Loop(){
@@ -63,13 +70,15 @@ void Loop(){
     if (RadarInfo_Updated) {
         RadarInfo tmp_info;
         tmp_info = radarInfo;
-        //Print_RadarInfo(tmp_info);
+        IPS_BOXF(50, 50, 10, 5, IPS_GREEN);
+        SPI1_Print("CMD sent\r\n");
+        //SPI1_Print_RadarInfo(tmp_info);
         if (choosenTargetID < 10) {
             uchar id = 0;
             for (id = 0; id<10; id++) {
                 if (tmp_info.targets[id].hasTarget) {
                     Update_FireControl_Direct(Get_Target_Position(tmp_info.targets[id]));
-                    //Print_Turrent_Para(turrent_para);
+                    //SPI1_Print_Turrent_Para(turret_para);
                     break;
                 }
             }

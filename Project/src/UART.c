@@ -42,7 +42,7 @@ void U2_Print_uint(uint c){
     UART2_SendData((uchar *)str, len);
 }
 
-void Print_Turrent_Para(Turret_para turrent_para){
+void U2_Print_Turrent_Para(Turret_para turrent_para){
     U2_Print("turret yaw:  ");
     U2_Print_float(turrent_para.yaw);
     U2_Print("    ");
@@ -51,7 +51,7 @@ void Print_Turrent_Para(Turret_para turrent_para){
     U2_Print("\r\n");
 }
 
-void Print_Vector3D(Vector3D vector){
+void U2_Print_Vector3D(Vector3D vector){
     U2_Print("x:  ");
     U2_Print_float(vector.x);
     U2_Print("    ");
@@ -63,7 +63,7 @@ void Print_Vector3D(Vector3D vector){
     U2_Print("\r\n");
 }
 
-void Print_RadarInfo(RadarInfo info){
+void U2_Print_RadarInfo(RadarInfo info){
     U2_Print("targetNum:  ");
     U2_Print_uchar(info.targetNum);
     U2_Print("\r\n");

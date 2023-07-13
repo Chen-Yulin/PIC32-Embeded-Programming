@@ -12,9 +12,11 @@ void U2_Print_uchar(uchar c);
 void U2_Print_float(float c);
 void U2_Print_uint(uint c);
 
-void Print_RadarInfo(RadarInfo info);
-void Print_Turrent_Para(Turret_para turrent_para);
-void Print_Vector3D(Vector3D vector);
+
+// TODO: move to SPI
+void U2_Print_RadarInfo(RadarInfo info);
+void U2_Print_Turrent_Para(Turret_para turrent_para);
+void U2_Print_Vector3D(Vector3D vector);
 
 
 
