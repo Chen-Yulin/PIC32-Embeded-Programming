@@ -17,6 +17,8 @@ Turret_para turret_para;
 
 uchar choosenTargetID;
 
+bool TWS = false;
+bool TWS_buttonDown = false;
 
 // use radar target info to calculate the position of target with respect to turrent
 Vector3 Get_Target_Position(TargetInfo info){
@@ -54,6 +56,26 @@ void Init_Turret_Servo(){
     Set_Servo2(90);
 }
 
+void SwitchTWS(){
+    // wait for the previous command to finish execution
+    uchar timeout = 0;
+    Timer1_ON(1000);
+    while (!ScreenExcution_OK || timeout>200){
+        if (Timer1Flags.timer1_done) {
+            timeout++;
+            Timer1Flags.timer1_done = false;
+        }
+    }
+    Timer1_OFF();
+
+    TWS = !TWS;
+    if (TWS) {
+        U2_Print("SET_TXT(0,'TWS');\r\n");
+    }else{
+        U2_Print("SET_TXT(0,'RWS');\r\n");
+    }
+}
+
 
 void Setup(){
     Init_MCU();
@@ -62,12 +84,24 @@ void Setup(){
 }
 
 void Loop(){
+    if (PORTDbits.RD6 == 0) {
+        IPS_RESET();
+        TWS = false;
+    }
+    if (PORTDbits.RD7 == 0 && !TWS_buttonDown) {
+        SwitchTWS();
+        TWS_buttonDown = true;
+    }else if(PORTDbits.RD7 == 1 && TWS_buttonDown){
+        TWS_buttonDown = false;
+    }
+    
+
     // do something on radar when the radar information is updated
     if (RadarInfo_Updated) {
         bool hasCommand = false;
         RadarInfo tmp_info;
         tmp_info = radarInfo;
-        SPI1_Print_RadarInfo(tmp_info);
+        //SPI1_Print_RadarInfo(tmp_info);
         
         //first clear existing spot on radar
         //U2_Print("BOXF(11,11,228,248,0);");
@@ -88,7 +122,7 @@ void Loop(){
         //radarInfo = tmp_info;
         RadarInfo_Updated = false;
         if (hasCommand) {
-            IPS_CMD_EXECUTE();
+            IPS_CMD_EXECUTE();  // the execution command is sent, the commands will take some time for execution
         }
     }
 

@@ -1,23 +1,25 @@
 #include "Timer.h"
-#include "UART.h"
 
 //define a interrupt flag struct
-struct bits {
-    unsigned timer1_done : 1;
-//    ...other user defined flags may go here
-} Timer1Flags;
+bits Timer1Flags;
 
-
-/* configure timer SFRs to generate num us delay*/
-void DelayUsec(short int num) {
-    // ...your code goes here
+void Timer1_ON(short int num){
     PR1 = num;
     Timer1Flags.timer1_done = 0;
     T1CONSET = 0x8000;              // turn on the timer 1
     TMR1 = 0x0;                     // reset the timer 1
-    while ( ! Timer1Flags.timer1_done );  // loop until flag 04 (for timer 1) is set
+}
+
+void Timer1_OFF(){
     Timer1Flags.timer1_done = 0;          // reset the flags
     T1CONCLR = 0x8000;                    // turn off timer 
+}
+
+/* configure timer SFRs to generate num us delay*/
+void DelayUsec(short int num) {
+    Timer1_ON(num);
+    while ( ! Timer1Flags.timer1_done );  // loop until flag 04 (for timer 1) is set
+    Timer1_OFF();
 }
 
 /* configure timer SFRs to generate 1 ms delay*/

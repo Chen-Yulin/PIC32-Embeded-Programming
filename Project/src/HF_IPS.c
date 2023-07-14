@@ -1,18 +1,28 @@
 #include "HF_IPS.h"
-#include "SPI.h"
 #include "Timer.h"
+#include "SPI.h"
 
 uchar ScreenOK_Buffer[5];
 uchar ScreenOK_Index = 0;
 TargetSpot TargetSpot_Buffer[10];
 
 void IPS_RESET(){
+    U2_Print("\r\n");
+    DelayMsec(200);
     U2_Print("RESET();\r\n");
-    DelayMsec(3000);
+    DelayMsec(1500);
 }
 
 void IPS_CMD_EXECUTE(){
-    while (!ScreenExcution_OK);
+    uchar timeout = 0;
+    Timer1_ON(1000);
+    while (!ScreenExcution_OK || timeout>200){
+        if (Timer1Flags.timer1_done) {
+            timeout++;
+            Timer1Flags.timer1_done = false;
+        }
+    }
+    Timer1_OFF();
     U2_Print("\r\n");
     ScreenExcution_OK = false;
     ScreenOK_Index = 0;
@@ -84,8 +94,8 @@ void IPS_CLR_TARGET(u_Vector2 info){
     uint y = info.y; // 0-80 : 0-230 : 245-15
     // restruct x and y
     if (x < 0) x = 0;
-    if (x > 210) x = 210;
-    if (y < 0) y = 0;
+    if (x > 209) x = 209;
+    if (y < 1) y = 1;
     if (y > 230) y = 230;
     IPS_BOXF(x+15, 245-y, 9, 5, 0);
 

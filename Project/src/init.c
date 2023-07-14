@@ -7,12 +7,16 @@ void Init_IO(){
     TRISDbits.TRISD2 = 0;
     TRISDbits.TRISD3 = 0;
     TRISDbits.TRISD6 = 1;
+    TRISDbits.TRISD7 = 1;
+    TRISDbits.TRISD13 = 1;
     TRISDbits.TRISD10 = 0;  // SPI1 SCK
     TRISEbits.TRISE7 = 0;   // SPI1 D/C
 
 
-    // set pull up for RD6 (multiplexed with SW1 and CN15)
+    // set pull up for RD6, RD7, RD13 (multiplexed with SW1 and CN15)
     CNPUEbits.CNPUE15 = 1;
+    CNPUEbits.CNPUE16 = 1;
+    CNPUEbits.CNPUE19 = 1;
 }
 
 void Init_CLK(){
@@ -89,7 +93,7 @@ void Init_UART(){
     U1MODEbits.ON = 0;  // turn off UART1
     U1MODEbits.PDSEL = 1;   // 8 bit data, even parity
     U1MODEbits.STSEL = 0;   // 1 bit stop
-    U1BRGSET = 51; // baud rate 9600: 8M/16*(51+1)
+    U1BRGSET = 51; // baud rate 38400: 8M/4*(51+1)
     U1MODEbits.ON = 1;  // turn on UART1
     U1STAbits.UTXEN = 1;// enable transmit
     U1STAbits.URXEN = 1;// enable receive
@@ -99,6 +103,7 @@ void Init_UART(){
     U2MODEbits.ON = 0;  // turn off UART2
     U2MODEbits.PDSEL = 0;   // 8 bit data, no parity
     U2MODEbits.STSEL = 0;   // 1 bit stop
+    U2MODEbits.BRGH = 1;    // high speed mode
     U2BRGSET = 51; // baud rate 9600: 8M/16*(51+1)
     U2MODEbits.ON = 1;  // turn on UART2
     U2STAbits.UTXEN = 1;// enable transmit
