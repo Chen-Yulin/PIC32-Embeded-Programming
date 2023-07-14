@@ -8,9 +8,9 @@ TargetSpot TargetSpot_Buffer[10];
 
 void IPS_RESET(){
     U2_Print("\r\n");
-    DelayMsec(200);
+    DelayMsec(1000);
     U2_Print("RESET();\r\n");
-    DelayMsec(1500);
+    DelayMsec(1100);
 }
 
 void IPS_CMD_EXECUTE(){

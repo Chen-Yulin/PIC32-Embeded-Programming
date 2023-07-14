@@ -101,7 +101,7 @@ void Loop(){
         bool hasCommand = false;
         RadarInfo tmp_info;
         tmp_info = radarInfo;
-        //SPI1_Print_RadarInfo(tmp_info);
+        SPI1_Print_RadarInfo(tmp_info);
         
         //first clear existing spot on radar
         //U2_Print("BOXF(11,11,228,248,0);");
