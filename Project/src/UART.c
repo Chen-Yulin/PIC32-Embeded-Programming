@@ -51,7 +51,7 @@ void U2_Print_Turrent_Para(Turret_para turrent_para){
     U2_Print("\r\n");
 }
 
-void U2_Print_Vector3D(Vector3D vector){
+void U2_Print_Vector3D(Vector3 vector){
     U2_Print("x:  ");
     U2_Print_float(vector.x);
     U2_Print("    ");

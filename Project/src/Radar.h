@@ -14,6 +14,7 @@ typedef struct TargetInfo{
 typedef struct RadarInfo{
     uchar targetNum;
     TargetInfo targets[RADAR_MAX_TARGET];
+    TargetInfo preTargets[RADAR_MAX_TARGET];
 } RadarInfo;
 
 extern uchar RADAR_GET_STATUS[RADAR_GET_STATUS_LEN];

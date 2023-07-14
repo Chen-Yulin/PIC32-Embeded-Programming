@@ -71,7 +71,7 @@ void Init_Interrupt(){
     
     // Configure UART interrupts
     IPC6SET = 0x0005;           // UART 1: priority is 1, subpriority is 1
-    IPC8SET = 0x0006;           // UART 2: priority is 1, subpriority is 2
+    IPC8SET = 0x0006;           // UART 2: priority is 1, subpriority is 1
     IFS0bits.U1RXIF = 0;        // clear the flag for UART 1
     IFS1bits.U2RXIF = 0;        // clear the flag for UART 2
 

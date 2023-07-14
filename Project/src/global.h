@@ -15,22 +15,27 @@
 extern bool RadarInfo_Updated;
 extern bool ScreenExcution_OK;
 
+// type definitions
+typedef unsigned char uchar;
+typedef uint16_t uint;
+
 
 // struct definition
 typedef struct {
     float x;
     float y;
     float z;
-} Vector3D;
+} Vector3;
+
+typedef struct {
+    uint x;
+    uint y;
+} u_Vector2;
 
 typedef struct {
     float yaw;
     float pitch;
 } Turret_para;
-
-// type definitions
-typedef unsigned char uchar;
-typedef uint16_t uint;
 
 // Port definitions
 #define Button PORTDbits.RD6

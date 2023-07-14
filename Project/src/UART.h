@@ -16,7 +16,7 @@ void U2_Print_uint(uint c);
 // TODO: move to SPI
 void U2_Print_RadarInfo(RadarInfo info);
 void U2_Print_Turrent_Para(Turret_para turrent_para);
-void U2_Print_Vector3D(Vector3D vector);
+void U2_Print_Vector3D(Vector3 vector);
 
 
 

@@ -51,7 +51,7 @@ void SPI1_Print_Turrent_Para(Turret_para turrent_para){
     SPI1_Print("\r\n");
 }
 
-void SPI1_Print_Vector3D(Vector3D vector){
+void SPI1_Print_Vector3D(Vector3 vector){
     SPI1_Print("x:  ");
     SPI1_Print_float(vector.x);
     SPI1_Print("    ");

@@ -38,6 +38,13 @@ void Update_RadarInfo(){
         uchar target_head = 12+i*8;
         int id = RadarInfo_Buffer[target_head];
         hasTarget[id] = 1;
+        if (radarInfo.targets[id].hasTarget) {
+            radarInfo.preTargets[id].hasTarget = true;
+            radarInfo.preTargets[id].distance = radarInfo.targets[id].distance;
+            radarInfo.preTargets[id].pitch = radarInfo.targets[id].pitch;
+            radarInfo.preTargets[id].yaw = radarInfo.targets[id].yaw;
+            radarInfo.preTargets[id].closingRate = 0;
+        }
         radarInfo.targets[id].hasTarget = true;
         radarInfo.targets[id].distance = RadarInfo_Buffer[target_head+1];
         radarInfo.targets[id].pitch = RadarInfo_Buffer[target_head+2];
