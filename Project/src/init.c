@@ -81,9 +81,9 @@ void Init_Interrupt(){
 
     /* enable global and individual interrupts */
     __asm( "ei" );                // enable interrupt globally by execute a assembly instruction "ei"
-    // enable interrupt for timer 1, timer 2, UART 1
+    // enable interrupt for timer 1, UART 1
     IEC0bits.T1IE = 1;
-    IEC0bits.T2IE = 1;
+    //IEC0bits.T2IE = 1;
     IEC0bits.U1RXIE = 1;
     IEC1bits.U2RXIE = 1;
 }
@@ -122,7 +122,7 @@ void Init_SPI(){
     SPI1CONbits.SRXISEL = 0;// MSB first
     SPI1CONbits.MSTEN = 1;
     SPI1CONbits.CKP = 0;    // 0: idle state is low, 1: idle state is high
-    SPI1CONbits.CKE = 0;    // 1: data change from active to idle, 0: data change from idle to active
+    SPI1CONbits.CKE = 1;    // 1: data change from active to idle, 0: data change from idle to active
     //SPI1CONbits.ENHBUF = 1;
     SPI1BRGSET = 1;    // baud rate 2M: 8M/2*(1+1)
 

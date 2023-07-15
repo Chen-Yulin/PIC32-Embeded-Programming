@@ -58,16 +58,7 @@ void Init_Turret_Servo(){
 
 void SwitchTWS(){
     // wait for the previous command to finish execution
-    uchar timeout = 0;
-    Timer1_ON(1000);
-    while (!ScreenExcution_OK || timeout>200){
-        if (Timer1Flags.timer1_done) {
-            timeout++;
-            Timer1Flags.timer1_done = false;
-        }
-    }
-    Timer1_OFF();
-
+    IPS_CHECKBUSY();
     TWS = !TWS;
     if (TWS) {
         U2_Print("SET_TXT(0,'TWS');\r\n");
@@ -88,31 +79,33 @@ void Loop(){
         IPS_RESET();
         TWS = false;
     }
+
     if (PORTDbits.RD7 == 0 && !TWS_buttonDown) {
         SwitchTWS();
         TWS_buttonDown = true;
     }else if(PORTDbits.RD7 == 1 && TWS_buttonDown){
         TWS_buttonDown = false;
     }
+    DelayMsec(20);
+    SPI1_Print_uchar(radarInfo.targetNum);
+    SPI1_Print("\r\n");
     
 
     // do something on radar when the radar information is updated
     if (RadarInfo_Updated) {
         bool hasCommand = false;
-        RadarInfo tmp_info;
-        tmp_info = radarInfo;
-        SPI1_Print_RadarInfo(tmp_info);
+        //SPI1_Print_RadarInfo(tmp_info);
         
         //first clear existing spot on radar
         //U2_Print("BOXF(11,11,228,248,0);");
         hasCommand = IPS_CLR_ALL_TARGET();
-
+        SPI1_Print_uchar(radarInfo.targetNum);
         // update new spot on screen
         for (uchar id = 0; id<10; id++) {
-            if (tmp_info.targets[id].hasTarget) {
-                Update_FireControl_Direct(Get_Target_Position(tmp_info.targets[id]));
+            if (radarInfo.targets[id].hasTarget) {
+                Update_FireControl_Direct(Get_Target_Position(radarInfo.targets[id]));
                 //SPI1_Print_Turrent_Para(turret_para);
-                IPS_DRAW_TARGET(tmp_info.targets[id]);
+                IPS_DRAW_TARGET(radarInfo.targets[id]);
                 hasCommand = true;
             }
         }
@@ -132,8 +125,6 @@ void Loop(){
 int main(void)
 {
     Setup();
-    
-
     while(1){
         Loop();
     }

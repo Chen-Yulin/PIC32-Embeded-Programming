@@ -8,21 +8,13 @@ TargetSpot TargetSpot_Buffer[10];
 
 void IPS_RESET(){
     U2_Print("\r\n");
-    DelayMsec(1000);
+    DelayMsec(500);
     U2_Print("RESET();\r\n");
-    DelayMsec(1100);
+    DelayMsec(1200);
 }
 
 void IPS_CMD_EXECUTE(){
-    uchar timeout = 0;
-    Timer1_ON(1000);
-    while (!ScreenExcution_OK || timeout>200){
-        if (Timer1Flags.timer1_done) {
-            timeout++;
-            Timer1Flags.timer1_done = false;
-        }
-    }
-    Timer1_OFF();
+    IPS_CHECKBUSY();
     U2_Print("\r\n");
     ScreenExcution_OK = false;
     ScreenOK_Index = 0;
@@ -135,6 +127,14 @@ bool IPS_CLR_ALL_TARGET(){
     return hasCommand;
 }
 
+void IPS_CHECKBUSY(){
+    uint timeout = 0;
+    while (!ScreenExcution_OK && timeout<20000){
+        SPI1_Print_uint(timeout);
+        timeout++;
+    }
+}
+
 
 //ISF for UART2 RX
 #pragma interrupt U2_RX_Interrupt ipl1 vector 32
@@ -146,7 +146,7 @@ void U2_RX_Interrupt(void){
             data = U2RXREG;
             ScreenOK_Buffer[ScreenOK_Index] = data;
             ScreenOK_Index ++;
-            if(ScreenOK_Index == 4){
+            if(data == 0x4F){
                 //SPI1_Print((char *)ScreenOK_Buffer);
                 // update radar info using data in buffer
                 ScreenExcution_OK = true;

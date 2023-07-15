@@ -30,7 +30,7 @@ void IPS_LINE(uint xs, uint ys, uint xe, uint ye, uint color);
 void IPS_DRAW_TARGET(TargetInfo info);
 void IPS_CLR_TARGET(u_Vector2 info);
 bool IPS_CLR_ALL_TARGET();
-void IPS_REPAIR();
+void IPS_CHECKBUSY();
 
 #endif // !HF_IPS_H
 
