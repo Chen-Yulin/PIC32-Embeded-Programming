@@ -11,7 +11,9 @@ void Init_IO(){
     TRISDbits.TRISD13 = 1;
     TRISDbits.TRISD10 = 0;  // SPI1 SCK
     TRISEbits.TRISE7 = 0;   // SPI1 D/C
-
+    
+    //RB3 output
+    TRISBbits.TRISB3 = 0;
 
     // set pull up for RD6, RD7, RD13 (multiplexed with SW1 and CN15)
     CNPUEbits.CNPUE15 = 1;

@@ -1,4 +1,4 @@
-#include <p32xxxx.h>
+#include <pic32m-libs/p32xxxx.h>
 
 /* define macros for LCD instructions */
 #define LCD_IDLE 0x33

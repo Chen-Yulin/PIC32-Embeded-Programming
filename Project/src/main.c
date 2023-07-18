@@ -72,6 +72,7 @@ void Setup(){
     Init_MCU();
     Init_Turret_Servo();
     IPS_RESET();
+    //LATBbits.LATB3 = 1;
 }
 
 void Loop(){
