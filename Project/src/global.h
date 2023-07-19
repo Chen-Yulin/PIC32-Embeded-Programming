@@ -33,6 +33,11 @@ typedef struct {
 } u_Vector2;
 
 typedef struct {
+    float x;
+    float y;
+} f_Vector2;
+
+typedef struct {
     float yaw;
     float pitch;
 } Turret_para;

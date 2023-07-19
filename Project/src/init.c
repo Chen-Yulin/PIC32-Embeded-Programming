@@ -11,6 +11,8 @@ void Init_IO(){
     TRISDbits.TRISD13 = 1;
     TRISDbits.TRISD10 = 0;  // SPI1 SCK
     TRISEbits.TRISE7 = 0;   // SPI1 D/C
+    TRISBbits.TRISB0 = 1;   // ADC AN0
+    TRISBbits.TRISB1 = 1;   // ADC AN1
     
     //RB3 output
     TRISBbits.TRISB3 = 0;
@@ -19,6 +21,7 @@ void Init_IO(){
     CNPUEbits.CNPUE15 = 1;
     CNPUEbits.CNPUE16 = 1;
     CNPUEbits.CNPUE19 = 1;
+
 }
 
 void Init_CLK(){
@@ -88,6 +91,7 @@ void Init_Interrupt(){
     //IEC0bits.T2IE = 1;
     IEC0bits.U1RXIE = 1;
     IEC1bits.U2RXIE = 1;
+
 }
 
 void Init_UART(){
@@ -129,6 +133,15 @@ void Init_SPI(){
     SPI1BRGSET = 1;    // baud rate 2M: 8M/2*(1+1)
 
     SPI1CONbits.ON = 1;
+}
+
+void Init_ADC(){
+    AD1CON1bits.ON = 1;
+    AD1CON1bits.SSRC = 7;
+    AD1CON3bits.SAMC = 2;
+    AD1CHSbits.CH0SA = 0;
+    AD1CON1bits.ASAM = 1;
+    AD1CON2bits.VCFG = 0;
 
 }
 
@@ -140,4 +153,5 @@ void Init_MCU(){
     Init_Interrupt();
     Init_UART();
     Init_SPI();
+    Init_ADC();
 }

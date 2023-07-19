@@ -12,6 +12,7 @@
 #include "Servo.h"
 #include "HF_IPS.h"
 //#include "SPI.h"
+#include "ADC.h"
 
 Turret_para turret_para;
 
@@ -75,6 +76,15 @@ void Setup(){
     //LATBbits.LATB3 = 1;
 }
 
+void StickLoop(){
+    DelayMsec(100);
+    f_Vector2 res = Get_Stick_xy();
+    SPI1_Print_float(res.x);
+    SPI1_Print(",");
+    SPI1_Print_float(res.y);
+    SPI1_Print("\r\n");
+}
+
 void Loop(){
     if (PORTDbits.RD6 == 0) {
         IPS_RESET();
@@ -128,6 +138,7 @@ int main(void)
     Setup();
     while(1){
         Loop();
+        StickLoop();
     }
     return 0;
 }

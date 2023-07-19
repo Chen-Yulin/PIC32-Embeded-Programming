@@ -47,7 +47,7 @@ int main ()
 	LCD_init();
     PORTDbits.RD2 = 1;
     TRISBbits.TRISB2 =1;
-    AD1PCFG = 0xFFFB;
+    AD1PCFG = 0xFFFA;
     AD1CON1bits.SSRC = 0x7;
 	AD1CON1bits.FORM = 0x6;
     
