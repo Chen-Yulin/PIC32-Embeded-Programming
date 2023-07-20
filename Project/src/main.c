@@ -47,6 +47,11 @@ void Update_FireControl_Direct(Vector3 lockedTarget_Position){
     turret_para.yaw = 90 - 180/M_PI * atan(realTarget_Position.x/realTarget_Position.z); // forward: z positive; right: x positive; anti-clockwise: 0~180 yaw angle
 }
 
+void Reset_FireControl(){
+    turret_para.pitch = 0; // up: y positive
+    turret_para.yaw = 90; // forward: z positive; right: x positive; anti-clockwise: 0~180 yaw angle
+}
+
 void Update_Turret_Servo(){
     Set_Servo1(turret_para.yaw);
     Set_Servo2(turret_para.pitch+90);
@@ -59,22 +64,86 @@ void Init_Turret_Servo(){
     Set_Servo2(90);
 }
 
-void SwitchTWS(){
-    // wait for the previous command to finish execution
-    IPS_CHECKBUSY();
-    TWS = !TWS;
-    if (TWS) {
-        U2_Print("SET_TXT(0,'TWS');\r\n");
-    }else{
-        U2_Print("SET_TXT(0,'RWS');\r\n");
-    }
-}
-
+// calculate the screen position of TDC
 u_Vector2 GetTDCScreenPosition(){
     u_Vector2 res;
     res.x = (uint)(TDC_pos.x * 100 + 100);
     res.y = (uint)(-TDC_pos.y * 110 + 110);
     return res;
+}
+
+// calculate the screen position of target
+u_Vector2 TargetInfo_2_ScreenPos(TargetInfo info){
+    u_Vector2 res;
+    res.x = (info.yaw-30) * 1.75f; // 30-150 : 0-210 : 15-225
+    res.y = (info.distance) * 2.875f; // 0-80 : 0-230 : 245-15
+    // restruct x and y
+    if (res.x < 0) res.x = 0;
+    if (res.x > 210) res.x = 210;
+    if (res.y < 0) res.y = 0;
+    if (res.y > 230) res.y = 230;
+    return res;
+}
+
+// find the cloest target to TDC and set the choosenID
+bool Get_TDC_Selection(){
+    uint dist = 999;
+    uchar id;
+    u_Vector2 TDCPosition = GetTDCScreenPosition();
+    for (int i = 0; i<10; i++) {
+        if (radarInfo.targets[i].hasTarget) {
+            u_Vector2 target_pos = TargetInfo_2_ScreenPos(radarInfo.targets[i]);
+            uint tmp_dist = abs(target_pos.x-TDCPosition.x) + abs(target_pos.y-TDCPosition.y);
+            if (tmp_dist < dist) {
+                id = i;
+                dist = tmp_dist;
+            }
+        }
+    }
+
+    if (dist != 999) {
+        choosenTargetID = id;
+        return true;
+    }else{
+        return false;
+    }
+}
+
+// switch between TWS and RWS
+void SwitchTWS(){
+    if (Get_TDC_Selection() && !TWS) {
+        // wait for the previous command to finish execution
+        IPS_CHECKBUSY();
+        TWS = true;
+        U2_Print("SET_TXT(0,'TWS');\r\n");
+    }else if(TWS){
+        IPS_CHECKBUSY();
+        TWS = false;
+        U2_Print("SET_TXT(0,'RWS');\r\n");
+    }
+}
+
+// move TDC to the choosen target
+void TDC_TrackTarget(){
+    if (radarInfo.targets[choosenTargetID].hasTarget) {
+        u_Vector2 target_pos = TargetInfo_2_ScreenPos(radarInfo.targets[choosenTargetID]);
+        TDC_pos.x = target_pos.x/100.0f - 1.05;
+        TDC_pos.y = -(target_pos.y/110.0f - 1.03);
+        if (TDC_pos.x>1) {
+            TDC_pos.x = 1;
+        }else if (TDC_pos.x < -1) {
+            TDC_pos.x = -1;
+        }
+        if (TDC_pos.y>1) {
+            TDC_pos.y = 1;
+        }else if (TDC_pos.y < -1) {
+            TDC_pos.y = -1;
+        }
+    }else{
+        if (TWS) {
+            SwitchTWS();
+        }
+    }
 }
 
 
@@ -145,15 +214,18 @@ void Loop(){
     }else if(PORTDbits.RD7 == 1 && TWS_buttonDown){
         TWS_buttonDown = false;
     }
+
+    if (TWS) {
+        TDC_TrackTarget();
+        if (radarInfo.targets[choosenTargetID].hasTarget) {
+            Update_FireControl_Direct(Get_Target_Position(radarInfo.targets[choosenTargetID]));
+        }
+    }else{
+        Reset_FireControl();
+    }
     
 
-    // do something on radar when the radar information is updated
-    if (RadarInfo_Updated) {
-        //SPI1_Print_RadarInfo(tmp_info);
-        // control turret
-        Update_Turret_Servo();
-        RadarInfo_Updated = false;
-    }
+    Update_Turret_Servo();
 
 }
 
