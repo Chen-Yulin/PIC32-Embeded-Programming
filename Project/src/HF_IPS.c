@@ -5,6 +5,7 @@
 uchar ScreenOK_Buffer[5];
 uchar ScreenOK_Index = 0;
 TargetSpot TargetSpot_Buffer[10];
+TargetSpot TDCSpot_Buffer;
 
 void IPS_RESET(){
     U2_Print("\r\n");
@@ -126,6 +127,63 @@ bool IPS_CLR_ALL_TARGET(){
     }
     return hasCommand;
 }
+
+
+void IPS_DRAW_TDC(u_Vector2 info){
+    uint x = info.x; // 30-150 : 0-210 : 15-225
+    uint y = info.y; // 0-80 : 0-230 : 245-15
+    // restruct x and y
+    if (x < 0) x = 0;
+    if (x > 200) x = 200;
+    if (y < 0) y = 0;
+    if (y > 220) y = 220;
+
+    IPS_BOXF(x+20-8, 240-y, 3, 18, IPS_YELLOW);
+    IPS_BOXF(x+20+8, 240-y, 3, 18, IPS_YELLOW);
+
+    TDCSpot_Buffer.hasTarget = true;
+    TDCSpot_Buffer.pos.x = x;
+    TDCSpot_Buffer.pos.y = y;
+}
+
+bool IPS_CLR_TDC(){
+    if (!TDCSpot_Buffer.hasTarget) {
+        return false;
+    }
+    uint x = TDCSpot_Buffer.pos.x; // 30-150 : 0-210 : 15-225
+    uint y = TDCSpot_Buffer.pos.y; // 0-80 : 0-230 : 245-15
+    // restruct x and y
+    if (x < 0) x = 0;
+    if (x > 199) x = 199;
+    if (y < 1) y = 1;
+    if (y > 220) y = 220;
+    IPS_BOXF(x+20, 240-y, 19, 19, IPS_BLACK);
+
+    // judge whether intersection with line happen
+    uint xs = x+20-19/2;
+    uint ys = 240-y-19/2;
+    uint xe = x+20+19/2;
+    uint ye = 240-y+19/2;
+    if(xs<=65 && xe>=65){
+        IPS_LINE(65, ys, 65, ye, IPS_GREEN);
+    }else if (xs<=120 && xe>=120){
+        IPS_LINE(120, ys, 120, ye, IPS_GREEN);    
+    }else if (xs<=175 && xe>=175) {
+        IPS_LINE(175, ys, 175, ye, IPS_GREEN);
+    }
+
+    if (ys<=70 && ye>=70) {
+        IPS_LINE(xs, 70, xe, 70, IPS_GREEN);
+    }else if (ys<=130 && ye>=130) {
+        IPS_LINE(xs, 130, xe, 130, IPS_GREEN);
+    }else if (ys<=190 && ye>=190) {
+        IPS_LINE(xs, 190, xe, 190, IPS_GREEN);
+    }
+    return true;
+}
+
+
+
 
 void IPS_CHECKBUSY(){
     uint timeout = 0;

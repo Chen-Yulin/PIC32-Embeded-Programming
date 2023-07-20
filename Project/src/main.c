@@ -21,6 +21,8 @@ uchar choosenTargetID;
 bool TWS = false;
 bool TWS_buttonDown = false;
 
+f_Vector2 TDC_pos;
+
 // use radar target info to calculate the position of target with respect to turrent
 Vector3 Get_Target_Position(TargetInfo info){
     Vector3 target_Position;
@@ -68,6 +70,13 @@ void SwitchTWS(){
     }
 }
 
+u_Vector2 GetTDCScreenPosition(){
+    u_Vector2 res;
+    res.x = (uint)(TDC_pos.x * 100 + 100);
+    res.y = (uint)(-TDC_pos.y * 110 + 110);
+    return res;
+}
+
 
 void Setup(){
     Init_MCU();
@@ -77,12 +86,51 @@ void Setup(){
 }
 
 void StickLoop(){
-    DelayMsec(100);
+    DelayMsec(10);
     f_Vector2 res = Get_Stick_xy();
+    /*
     SPI1_Print_float(res.x);
     SPI1_Print(",");
     SPI1_Print_float(res.y);
-    SPI1_Print("\r\n");
+    SPI1_Print("\r\n");*/
+    TDC_pos.x += 0.05*res.y*TDC_SPEED;
+    TDC_pos.y += -0.05*res.x*TDC_SPEED;
+    if (TDC_pos.x>1) {
+        TDC_pos.x = 1;
+    }else if (TDC_pos.x < -1) {
+        TDC_pos.x = -1;
+    }
+    if (TDC_pos.y>1) {
+        TDC_pos.y = 1;
+    }else if (TDC_pos.y < -1) {
+        TDC_pos.y = -1;
+    }
+}
+
+void RenderLoop(){
+    bool hasCommand = false;
+    //first clear existing spot on radar
+    hasCommand = IPS_CLR_ALL_TARGET();
+    if (hasCommand) {
+        IPS_CLR_TDC();
+    }else{
+        hasCommand = IPS_CLR_TDC();
+    }
+    // update TDC position
+    IPS_DRAW_TDC(GetTDCScreenPosition());
+    // update new spot on screen
+    for (uchar id = 0; id<10; id++) {
+        if (radarInfo.targets[id].hasTarget) {
+            Update_FireControl_Direct(Get_Target_Position(radarInfo.targets[id]));
+            //SPI1_Print_Turrent_Para(turret_para);
+            IPS_DRAW_TARGET(radarInfo.targets[id]);
+            hasCommand = true;
+        }
+    }
+
+    if (hasCommand) {
+        IPS_CMD_EXECUTE();  // the execution command is sent, the commands will take some time for execution
+    }
 }
 
 void Loop(){
@@ -97,37 +145,14 @@ void Loop(){
     }else if(PORTDbits.RD7 == 1 && TWS_buttonDown){
         TWS_buttonDown = false;
     }
-    DelayMsec(20);
-    SPI1_Print_uchar(radarInfo.targetNum);
-    SPI1_Print("\r\n");
     
 
     // do something on radar when the radar information is updated
     if (RadarInfo_Updated) {
-        bool hasCommand = false;
         //SPI1_Print_RadarInfo(tmp_info);
-        
-        //first clear existing spot on radar
-        //U2_Print("BOXF(11,11,228,248,0);");
-        hasCommand = IPS_CLR_ALL_TARGET();
-        SPI1_Print_uchar(radarInfo.targetNum);
-        // update new spot on screen
-        for (uchar id = 0; id<10; id++) {
-            if (radarInfo.targets[id].hasTarget) {
-                Update_FireControl_Direct(Get_Target_Position(radarInfo.targets[id]));
-                //SPI1_Print_Turrent_Para(turret_para);
-                IPS_DRAW_TARGET(radarInfo.targets[id]);
-                hasCommand = true;
-            }
-        }
-
         // control turret
         Update_Turret_Servo();
-        //radarInfo = tmp_info;
         RadarInfo_Updated = false;
-        if (hasCommand) {
-            IPS_CMD_EXECUTE();  // the execution command is sent, the commands will take some time for execution
-        }
     }
 
 }
@@ -139,6 +164,7 @@ int main(void)
     while(1){
         Loop();
         StickLoop();
+        RenderLoop();
     }
     return 0;
 }

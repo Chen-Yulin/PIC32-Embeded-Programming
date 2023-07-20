@@ -66,6 +66,9 @@ typedef struct {
 #define TURRENT_Y_OFFSET 0
 #define TURRENT_Z_OFFSET 0
 
+// for screen
+#define TDC_SPEED 1
+
 // global tool
 char * uchar_2_str(uchar c, char * str);
 char * float_2_str(float i, char * str);
