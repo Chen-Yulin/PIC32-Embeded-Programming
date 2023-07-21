@@ -23,6 +23,10 @@ bool TWS_buttonDown = false;
 
 f_Vector2 TDC_pos;
 
+float distZoom = 1;
+bool ZoomIn_buttonDown = false;
+bool ZoomOut_buttonDown = false;
+
 // use radar target info to calculate the position of target with respect to turrent
 Vector3 Get_Target_Position(TargetInfo info){
     Vector3 target_Position;
@@ -146,6 +150,22 @@ void TDC_TrackTarget(){
     }
 }
 
+void IncreaseZoom(){
+    distZoom *= 2;
+    IPS_CHECKBUSY();
+    U2_Print("SET_TXT(6,'");
+    U2_Print_float(8/distZoom);
+    U2_Print("m');\r\n");
+}
+
+void DecreaseZoom(){
+    distZoom /= 2;
+    IPS_CHECKBUSY();
+    U2_Print("SET_TXT(6,'");
+    U2_Print_float(8/distZoom);
+    U2_Print("m');\r\n");
+}
+
 
 void Setup(){
     Init_MCU();
@@ -186,13 +206,13 @@ void RenderLoop(){
         hasCommand = IPS_CLR_TDC();
     }
     // update TDC position
-    IPS_DRAW_TDC(GetTDCScreenPosition());
+    IPS_DRAW_TDC(GetTDCScreenPosition(),distZoom);
     // update new spot on screen
     for (uchar id = 0; id<10; id++) {
         if (radarInfo.targets[id].hasTarget) {
             Update_FireControl_Direct(Get_Target_Position(radarInfo.targets[id]));
             //SPI1_Print_Turrent_Para(turret_para);
-            IPS_DRAW_TARGET(radarInfo.targets[id]);
+            IPS_DRAW_TARGET(radarInfo.targets[id],distZoom);
             hasCommand = true;
         }
     }
@@ -203,16 +223,30 @@ void RenderLoop(){
 }
 
 void Loop(){
-    if (PORTDbits.RD6 == 0) {
+    if (SCREENRESET_BUTTON == 0) {
         IPS_RESET();
         TWS = false;
     }
 
-    if (PORTDbits.RD7 == 0 && !TWS_buttonDown) {
+    if (SWITCHTWS_BUTTON == 0 && !TWS_buttonDown) {
         SwitchTWS();
         TWS_buttonDown = true;
-    }else if(PORTDbits.RD7 == 1 && TWS_buttonDown){
+    }else if(SWITCHTWS_BUTTON == 1 && TWS_buttonDown){
         TWS_buttonDown = false;
+    }
+
+    if (ZOOMIN_BUTTON == 0 && !ZoomIn_buttonDown) {
+        IncreaseZoom();
+        ZoomIn_buttonDown = true;
+    }else if(ZOOMIN_BUTTON == 1 && ZoomIn_buttonDown){
+        ZoomIn_buttonDown = false;
+    }
+
+    if (ZOOMOUT_BUTTON == 0 && !ZoomOut_buttonDown) {
+        DecreaseZoom();
+        ZoomOut_buttonDown = true;
+    }else if(ZOOMOUT_BUTTON == 1 && ZoomOut_buttonDown){
+        ZoomOut_buttonDown = false;
     }
 
     if (TWS) {

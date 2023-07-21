@@ -28,10 +28,10 @@ void IPS_CMD_EXECUTE();
 void IPS_BOXF(uint x, uint y, uint w, uint h, uint color);
 void IPS_CIR(uint x, uint y, uint r, uint color);
 void IPS_LINE(uint xs, uint ys, uint xe, uint ye, uint color);
-void IPS_DRAW_TARGET(TargetInfo info);
+void IPS_DRAW_TARGET(TargetInfo info, float zoom);
 void IPS_CLR_TARGET(u_Vector2 info);
 bool IPS_CLR_ALL_TARGET();
-void IPS_DRAW_TDC(u_Vector2 pos);
+void IPS_DRAW_TDC(u_Vector2 pos, float zoom);
 bool IPS_CLR_TDC();
 
 void IPS_CHECKBUSY();

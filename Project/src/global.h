@@ -43,7 +43,10 @@ typedef struct {
 } Turret_para;
 
 // Port definitions
-#define Button PORTDbits.RD6
+#define ZOOMIN_BUTTON PORTDbits.RD7
+#define ZOOMOUT_BUTTON PORTDbits.RD13
+#define SWITCHTWS_BUTTON PORTDbits.RD12
+#define SCREENRESET_BUTTON PORTDbits.RD6
 #define LED0 LATDbits.LATD0
 #define LED2 LATDbits.LATD1
 #define LED3 LATDbits.LATD2

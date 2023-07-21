@@ -61,9 +61,9 @@ void IPS_LINE(uint xs, uint ys, uint xe, uint ye, uint color){
     U2_Print(");");
 }
 
-void IPS_DRAW_TARGET(TargetInfo info){
+void IPS_DRAW_TARGET(TargetInfo info, float zoom){
     uint x = (info.yaw-30) * 1.75f; // 30-150 : 0-210 : 15-225
-    uint y = (info.distance) * 2.875f; // 0-80 : 0-230 : 245-15
+    uint y = (info.distance) * 2.875f * zoom; // 0-80 : 0-230 : 245-15
     // restruct x and y
     if (x < 0) x = 0;
     if (x > 210) x = 210;
@@ -90,7 +90,7 @@ void IPS_CLR_TARGET(u_Vector2 info){
     if (x > 209) x = 209;
     if (y < 1) y = 1;
     if (y > 230) y = 230;
-    IPS_BOXF(x+15, 245-y, 9, 5, 0);
+    IPS_BOXF(x+15, 245-y, 9, 6, 0);
 
     // judge whether intersection with line happen
     uint xs = x+15-10/2;
@@ -129,9 +129,9 @@ bool IPS_CLR_ALL_TARGET(){
 }
 
 
-void IPS_DRAW_TDC(u_Vector2 info){
+void IPS_DRAW_TDC(u_Vector2 info, float zoom){
     uint x = info.x; // 30-150 : 0-210 : 15-225
-    uint y = info.y; // 0-80 : 0-230 : 245-15
+    uint y = info.y * zoom; // 0-80 : 0-230 : 245-15
     // restruct x and y
     if (x < 0) x = 0;
     if (x > 200) x = 200;

@@ -9,6 +9,7 @@ void Init_IO(){
     TRISDbits.TRISD6 = 1;
     TRISDbits.TRISD7 = 1;
     TRISDbits.TRISD13 = 1;
+    TRISDbits.TRISD12 = 1;
     TRISDbits.TRISD10 = 0;  // SPI1 SCK
     TRISEbits.TRISE7 = 0;   // SPI1 D/C
     TRISBbits.TRISB0 = 1;   // ADC AN0
