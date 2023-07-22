@@ -186,7 +186,7 @@ bool IPS_CLR_TDC(){
 
 
 void IPS_CHECKBUSY(){
-    uint timeout = 0;
+    long int timeout = 0;
     while (!ScreenExcution_OK && timeout<20000){
         SPI1_Print_uint(timeout);
         timeout++;

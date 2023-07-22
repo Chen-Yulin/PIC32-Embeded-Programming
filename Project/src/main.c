@@ -14,18 +14,23 @@
 //#include "SPI.h"
 #include "ADC.h"
 
+bool WeaponPage = false;
+
 Turret_para turret_para;
 
 uchar choosenTargetID;
 
 bool TWS = false;
-bool TWS_buttonDown = false;
 
 f_Vector2 TDC_pos;
 
 float distZoom = 1;
+
+bool TWS_buttonDown = false;
 bool ZoomIn_buttonDown = false;
 bool ZoomOut_buttonDown = false;
+bool SwitchScreen_buttonDown = false;
+bool WeaponShoot_buttonDown = false;
 
 // use radar target info to calculate the position of target with respect to turrent
 Vector3 Get_Target_Position(TargetInfo info){
@@ -49,6 +54,18 @@ void Update_FireControl_Direct(Vector3 lockedTarget_Position){
 
     turret_para.pitch = 180/M_PI * atan(realTarget_Position.y/distance_xz); // up: y positive
     turret_para.yaw = 90 - 180/M_PI * atan(realTarget_Position.x/realTarget_Position.z); // forward: z positive; right: x positive; anti-clockwise: 0~180 yaw angle
+    
+    if (turret_para.pitch<-30) {
+        turret_para.pitch = -30;
+    }else if(turret_para.pitch>45){
+        turret_para.pitch = 45;
+    }
+
+    if (turret_para.yaw < 0) {
+        turret_para.yaw = 0;
+        }else if(turret_para.yaw > 180){
+        turret_para.yaw = 180;
+    }
 }
 
 void Reset_FireControl(){
@@ -57,8 +74,8 @@ void Reset_FireControl(){
 }
 
 void Update_Turret_Servo(){
-    Set_Servo1(turret_para.yaw);
-    Set_Servo2(turret_para.pitch+90);
+    Set_Servo1(turret_para.yaw+YAW_SERVO_OFFSET);
+    Set_Servo2(-turret_para.pitch+90+PITCH_SERVO_OFFSET);
 }
 
 void Init_Turret_Servo(){
@@ -166,6 +183,29 @@ void DecreaseZoom(){
     U2_Print("m');\r\n");
 }
 
+// switch the screen between Radar and TWS page
+void SwitchPage(){
+    if (WeaponPage) {
+        WeaponPage = false;
+        IPS_CHECKBUSY();
+        U2_Print("JUMP(0);\r\n");
+        DelayMsec(500);
+        // reload the configuration of radar page including TWS and zoom
+        U2_Print("SET_TXT(6,'");
+        U2_Print_float(8/distZoom);
+        U2_Print("m');");
+        if (TWS) {
+            U2_Print("SET_TXT(0,'TWS');");
+        }
+        IPS_CMD_EXECUTE();
+    }else{
+        WeaponPage = true;
+        IPS_CHECKBUSY();
+        U2_Print("JUMP(1);\r\n");
+        DelayMsec(500);
+    }
+}
+
 
 void Setup(){
     Init_MCU();
@@ -197,28 +237,48 @@ void StickLoop(){
 }
 
 void RenderLoop(){
-    bool hasCommand = false;
-    //first clear existing spot on radar
-    hasCommand = IPS_CLR_ALL_TARGET();
-    if (hasCommand) {
-        IPS_CLR_TDC();
-    }else{
-        hasCommand = IPS_CLR_TDC();
-    }
-    // update TDC position
-    IPS_DRAW_TDC(GetTDCScreenPosition(),distZoom);
-    // update new spot on screen
-    for (uchar id = 0; id<10; id++) {
-        if (radarInfo.targets[id].hasTarget) {
-            Update_FireControl_Direct(Get_Target_Position(radarInfo.targets[id]));
-            //SPI1_Print_Turrent_Para(turret_para);
-            IPS_DRAW_TARGET(radarInfo.targets[id],distZoom);
-            hasCommand = true;
+    if (!WeaponPage) {
+        bool hasCommand = false;
+        //first clear existing spot on radar
+        hasCommand = IPS_CLR_ALL_TARGET();
+        if (hasCommand) {
+            IPS_CLR_TDC();
+        }else{
+            hasCommand = IPS_CLR_TDC();
         }
-    }
+        // update TDC position
+        IPS_DRAW_TDC(GetTDCScreenPosition(),distZoom);
+        // update new spot on screen
+        for (uchar id = 0; id<10; id++) {
+            if (radarInfo.targets[id].hasTarget) {
+                IPS_DRAW_TARGET(radarInfo.targets[id],distZoom);
+                hasCommand = true;
+            }
+        }
 
-    if (hasCommand) {
-        IPS_CMD_EXECUTE();  // the execution command is sent, the commands will take some time for execution
+        if (hasCommand) {
+            IPS_CMD_EXECUTE();  // the execution command is sent, the commands will take some time for execution
+        }
+    }else{
+        DelayMsec(50);
+        U2_Print("SET_POINT(4,");
+        int angle = 180 - (int)turret_para.yaw;
+        U2_Print_float(angle);
+        U2_Print(");");
+        
+        U2_Print("SET_PROG(5,");
+        int pit = (int)(turret_para.pitch + 30)*1.66;
+        U2_Print_float(pit);
+        U2_Print(");");
+
+        U2_Print("SET_TXT(10,");
+        U2_Print_float(turret_para.yaw);
+        U2_Print(");");
+        U2_Print("SET_TXT(11,");
+        U2_Print_float(turret_para.pitch);
+        U2_Print(");");
+
+        IPS_CMD_EXECUTE();
     }
 }
 
@@ -226,28 +286,39 @@ void Loop(){
     if (SCREENRESET_BUTTON == 0) {
         IPS_RESET();
         TWS = false;
+        distZoom = 1;
+        WeaponPage = false;
+    }
+    if (SCREENSWITCH_BUTTON == 0 && !SwitchScreen_buttonDown) {
+        SwitchPage();
+        SwitchScreen_buttonDown = true;
+    }else if(SCREENSWITCH_BUTTON == 1 && SwitchScreen_buttonDown){
+        SwitchScreen_buttonDown = false;
+    }
+    if (!WeaponPage) {
+        if (SWITCHTWS_BUTTON == 0 && !TWS_buttonDown) {
+            SwitchTWS();
+            TWS_buttonDown = true;
+        }else if(SWITCHTWS_BUTTON == 1 && TWS_buttonDown){
+            TWS_buttonDown = false;
+        }
+
+        if (ZOOMIN_BUTTON == 0 && !ZoomIn_buttonDown) {
+            IncreaseZoom();
+            ZoomIn_buttonDown = true;
+        }else if(ZOOMIN_BUTTON == 1 && ZoomIn_buttonDown){
+            ZoomIn_buttonDown = false;
+        }
+
+        if (ZOOMOUT_BUTTON == 0 && !ZoomOut_buttonDown) {
+            DecreaseZoom();
+            ZoomOut_buttonDown = true;
+        }else if(ZOOMOUT_BUTTON == 1 && ZoomOut_buttonDown){
+            ZoomOut_buttonDown = false;
+        }
+    }else{
     }
 
-    if (SWITCHTWS_BUTTON == 0 && !TWS_buttonDown) {
-        SwitchTWS();
-        TWS_buttonDown = true;
-    }else if(SWITCHTWS_BUTTON == 1 && TWS_buttonDown){
-        TWS_buttonDown = false;
-    }
-
-    if (ZOOMIN_BUTTON == 0 && !ZoomIn_buttonDown) {
-        IncreaseZoom();
-        ZoomIn_buttonDown = true;
-    }else if(ZOOMIN_BUTTON == 1 && ZoomIn_buttonDown){
-        ZoomIn_buttonDown = false;
-    }
-
-    if (ZOOMOUT_BUTTON == 0 && !ZoomOut_buttonDown) {
-        DecreaseZoom();
-        ZoomOut_buttonDown = true;
-    }else if(ZOOMOUT_BUTTON == 1 && ZoomOut_buttonDown){
-        ZoomOut_buttonDown = false;
-    }
 
     if (TWS) {
         TDC_TrackTarget();

@@ -43,10 +43,12 @@ typedef struct {
 } Turret_para;
 
 // Port definitions
-#define ZOOMIN_BUTTON PORTDbits.RD7
-#define ZOOMOUT_BUTTON PORTDbits.RD13
+#define ZOOMIN_BUTTON PORTDbits.RD13
+#define ZOOMOUT_BUTTON PORTDbits.RD7
 #define SWITCHTWS_BUTTON PORTDbits.RD12
 #define SCREENRESET_BUTTON PORTDbits.RD6
+#define SCREENSWITCH_BUTTON PORTFbits.RF0
+#define WEAPONSHOOT_BUTTON PORTFbits.RF1
 #define LED0 LATDbits.LATD0
 #define LED2 LATDbits.LATD1
 #define LED3 LATDbits.LATD2
@@ -68,6 +70,9 @@ typedef struct {
 #define TURRENT_X_OFFSET 0
 #define TURRENT_Y_OFFSET 0
 #define TURRENT_Z_OFFSET 0
+
+#define YAW_SERVO_OFFSET -3
+#define PITCH_SERVO_OFFSET 0
 
 // for screen
 #define TDC_SPEED 1
