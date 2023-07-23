@@ -35,7 +35,7 @@ bool WeaponShoot_buttonDown = false;
 // use radar target info to calculate the position of target with respect to turrent
 Vector3 Get_Target_Position(TargetInfo info){
     Vector3 target_Position;
-    char pitch = 90-info.pitch;
+    char pitch = 90-info.pitch + RADAR_PITCH;
     float distance_xz = (float)info.distance * cos(M_PI/180 * pitch);
     target_Position.x = distance_xz * cos(M_PI/180 * info.yaw);
     target_Position.z = distance_xz * sin(M_PI/180 * info.yaw);
@@ -51,10 +51,19 @@ void Update_FireControl_Direct(Vector3 lockedTarget_Position){
 
     float distance_xyz = sqrt(pow(realTarget_Position.x, 2) + pow(realTarget_Position.y, 2) + pow(realTarget_Position.z, 2));
     float distance_xz = sqrt(pow(realTarget_Position.x, 2) + pow(realTarget_Position.z, 2));
-
-    turret_para.pitch = 180/M_PI * atan(realTarget_Position.y/distance_xz); // up: y positive
-    turret_para.yaw = 90 - 180/M_PI * atan(realTarget_Position.x/realTarget_Position.z); // forward: z positive; right: x positive; anti-clockwise: 0~180 yaw angle
     
+    float previous_pitch = turret_para.pitch;
+    float previous_yaw = turret_para.yaw;
+
+    float now_pitch = 180/M_PI * atan(realTarget_Position.y/distance_xz); // up: y positive
+    float now_yaw = 90 - 180/M_PI * atan(realTarget_Position.x/realTarget_Position.z); // forward: z positive; right: x positive; anti-clockwise: 0~180 yaw angle
+
+    //turret_para.pitch = previous_pitch + float_clamp(0.3f * (now_pitch - previous_pitch), -1, 1);
+    //turret_para.yaw = previous_yaw + float_clamp(0.3f * (now_yaw - previous_yaw), -1, 1);
+    turret_para.pitch = now_pitch;
+    turret_para.yaw = now_yaw;
+
+
     if (turret_para.pitch<-30) {
         turret_para.pitch = -30;
     }else if(turret_para.pitch>45){
@@ -317,6 +326,13 @@ void Loop(){
             ZoomOut_buttonDown = false;
         }
     }else{
+        if (TWS) {
+            if (WEAPONSHOOT_BUTTON == 0) {
+                SHOOT = 1;
+            }else{
+                SHOOT = 0;
+            }
+        }
     }
 
 

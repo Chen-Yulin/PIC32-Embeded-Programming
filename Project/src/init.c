@@ -6,6 +6,7 @@ void Init_IO(){
     TRISDbits.TRISD1 = 0;
     TRISDbits.TRISD2 = 0;
     TRISDbits.TRISD3 = 0;
+    TRISGbits.TRISG1 = 0;
     TRISDbits.TRISD6 = 1;
     TRISDbits.TRISD7 = 1;
     TRISDbits.TRISD13 = 1;

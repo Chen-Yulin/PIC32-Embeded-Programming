@@ -16,3 +16,13 @@ char * uint_2_str(uint c, char * str){
     return str;
 }
 
+float float_clamp(float data, float min, float max){
+    if (data<min) {
+        return min;
+    }else if (data>max) {
+        return max;
+    }else{
+        return data; 
+    }
+}
+

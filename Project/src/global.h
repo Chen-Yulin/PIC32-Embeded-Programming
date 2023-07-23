@@ -53,6 +53,7 @@ typedef struct {
 #define LED2 LATDbits.LATD1
 #define LED3 LATDbits.LATD2
 #define TFT_DC LATEbits.LATE7
+#define SHOOT LATGbits.LATG1
 
 // for radar UART
 #define RADAR_GET_STATUS_LEN 6
@@ -67,9 +68,11 @@ typedef struct {
 #define TFT_HEIGHT 20
 
 // for turret
-#define TURRENT_X_OFFSET 0
-#define TURRENT_Y_OFFSET 0
+#define TURRENT_X_OFFSET 2 // right positive, unit: dm
+#define TURRENT_Y_OFFSET -1 // up positive, unit: dm
 #define TURRENT_Z_OFFSET 0
+
+#define RADAR_PITCH 20  // the pitch setup of the radar
 
 #define YAW_SERVO_OFFSET -3
 #define PITCH_SERVO_OFFSET 0
@@ -82,6 +85,7 @@ char * uchar_2_str(uchar c, char * str);
 char * float_2_str(float i, char * str);
 char * uint_2_str(uint i, char * str);
 
+float float_clamp(float data, float min, float max);
 
 
 
