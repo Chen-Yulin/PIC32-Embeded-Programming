@@ -221,6 +221,7 @@ void Setup(){
     Init_Turret_Servo();
     IPS_RESET();
     //LATBbits.LATB3 = 1;
+    SHOOT = 0;
 }
 
 void StickLoop(){
